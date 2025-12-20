@@ -19,4 +19,8 @@ export class IngredientDAO extends BaseDAO<IngredientRecord> {
         return await this.create(db, ingredient);
     }
 
+    async findRecent(db: Connection): Promise<IngredientRecord[]> {
+        return await this.executeScript(db, "findRecentIngredients", {});
+    }
+
 }   

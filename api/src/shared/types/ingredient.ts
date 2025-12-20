@@ -1,5 +1,5 @@
-import { validateRequestPayload } from "../../types/utils";
-import { UnitType } from "./common";
+import { validateRequestPayload } from "./utils";
+import { UnitTypeEnum } from "./common";
 import * as t from "io-ts";
 
 
@@ -8,7 +8,7 @@ export type IngredientRecord = {
     name: string;
     category: string | null;
     vendor: string;
-    purchase_unit: UnitType;
+    purchase_unit: UnitTypeEnum;
     purchase_quantity: number;
     purchase_cost: number;
     cost_per_oz: number;
@@ -34,7 +34,7 @@ export interface IngredientInsertOrUpdateRequest extends t.TypeOf<typeof Ingredi
     name: string;
     category: string | null;
     vendor: string;
-    purchase_unit: UnitType;
+    purchase_unit: UnitTypeEnum;
     purchase_quantity: number;
     purchase_cost: number;
     cost_per_oz: number;

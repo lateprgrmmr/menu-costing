@@ -1,5 +1,6 @@
 import { Box, Button, Card, Typography } from "@mui/material";
 import { styles } from "../styles/Home.styles";
+import { useNavigate } from "react-router-dom";
 
 import {
     Construction as ConstructionIcon,
@@ -8,6 +9,7 @@ import {
 } from "@mui/icons-material";
 
 export const Home = () => {
+    const navigate = useNavigate();
     const features = [
         {
             icon: <ConstructionIcon />,
@@ -30,7 +32,10 @@ export const Home = () => {
             <Box sx={styles.hero}>
                 <Typography variant="h2" sx={styles.heroTitle}>Portion</Typography>
                 <Typography sx={styles.heroSubtitle}>Built for operators before opening day, Portion makes menu costing fast, transparent, and reusable — so you can price correctly from day one.</Typography>
-                <Button variant="contained" color="primary">Login</Button>
+                <Button variant="contained" color="primary" onClick={() => navigate("/dashboard")}>
+                    Get Started
+
+                </Button>
             </Box>
             <Box sx={styles.featuresSection}>
                 <Box sx={styles.featuresGrid}>
