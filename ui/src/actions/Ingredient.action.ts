@@ -13,6 +13,12 @@ export const loadRecentIngredients = async () => {
     return recentItems;
 };
 
+export const loadIngredientById = async (id: number) => {
+    const ingredient = await makeGetRequest<IngredientRecord>(`/ingredient/${id}`);
+    console.log(ingredient);
+    return ingredient;
+};
+
 export const updateIngredient = async (id: number, ingredient: IngredientInsertOrUpdateRequest) => {
     const updatedIngredient = await makePutRequest<IngredientRecord>('/ingredient', {
         name: ingredient.name,

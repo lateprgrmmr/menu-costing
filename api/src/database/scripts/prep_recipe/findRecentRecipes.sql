@@ -1,0 +1,1 @@
+SELECT * FROM prep_recipe WHERE created_at >= NOW() - INTERVAL '30 days' ORDER BY created_at DESC LIMIT 30;

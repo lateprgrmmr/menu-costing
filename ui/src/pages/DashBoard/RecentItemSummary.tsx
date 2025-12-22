@@ -1,38 +1,48 @@
-import { useEffect, useState } from "react";
-import type { IngredientRecord } from "../../shared/types/ingredient";
-import { loadRecentIngredients } from "../../actions/Ingredient.action";
+import {
+    useState
+} from "react";
 import { EditOrCreateIngredientDialog } from "../../features/ingredients/EditOrCreateIngredientDialog";
 import { Typography } from "@mui/material";
+import type { DashboardData } from "../../shared/types/dashboard";
+import EditOrCreateRecipeDialog from "../../features/recipes/EditOrCreateRecipeDialog";
+import EditOrCreateMenuItemDialog from "../../features/menuItems/EditOrCreateMenuItemDialog";
 
-const RecentItemSummary = () => {
-    const [recentItems, setRecentItems] = useState<IngredientRecord[]>([]);
-    const [open, setOpen] = useState(false);
-    const [selectedIngredientId, setSelectedIngredientId] = useState<number | null>(null);
-    const [selectedIngredient, setSelectedIngredient] = useState<IngredientRecord | null>(null);
+export enum RecentItemSummaryKindEnum {
+    INGREDIENT = "ingredient",
+    RECIPE = "recipe",
+    MENU_ITEM = "menu item",
+}
 
-    useEffect(() => {
-        const fetchRecentItems = async () => {
-            const results = await loadRecentIngredients();
-            setRecentItems(results);
-        }
-        fetchRecentItems();
-    }, []);
+interface RecentItemSummaryProps {
+    kind: RecentItemSummaryKindEnum;
+    data: DashboardData;
+}
 
-    useEffect(() => {
-        if (selectedIngredientId) {
-            const ingredient = recentItems.find((item) => item.id === selectedIngredientId);
-            if (ingredient) {
-                setSelectedIngredient(ingredient);
-            }
-        } else {
-            setSelectedIngredient(null);
-        }
-    }, [selectedIngredientId]);
+const RecentItemSummary = (props: RecentItemSummaryProps) => {
+    const { kind, data } = props;
+    const [ingredientDialogOpen, setIngredientDialogOpen] = useState(false);
+    const [recipeDialogOpen, setRecipeDialogOpen] = useState(false);
+    const [menuItemDialogOpen, setMenuItemDialogOpen] = useState(false);
+    const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+
 
     const handleItemClick = (id: number) => {
-        setSelectedIngredientId(id);
-        setOpen(true);
+        console.log('handleItemClick', kind)
+        setSelectedItemId(id);
+        if (kind === RecentItemSummaryKindEnum.INGREDIENT) {
+            setIngredientDialogOpen(true);
+        } else if (kind === RecentItemSummaryKindEnum.RECIPE) {
+            setRecipeDialogOpen(true);
+        } else if (kind === RecentItemSummaryKindEnum.MENU_ITEM) {
+            setMenuItemDialogOpen(true);
+        }
     }
+
+    const items =
+        kind === RecentItemSummaryKindEnum.INGREDIENT ?
+            data.recentIngredients : kind === RecentItemSummaryKindEnum.RECIPE
+                ? data.recentPrepRecipes : data.recentMenuItems;
+
 
     return (
         <div
@@ -44,7 +54,7 @@ const RecentItemSummary = () => {
                 height: '700px',
             }}
         >
-            <h4>Recent Item Summary</h4>
+            <h4 style={{ textTransform: 'capitalize' }}>Recent {kind} Summary</h4>
             <div style={{
                 maxWidth: '500px',
                 height: '600px',
@@ -54,11 +64,11 @@ const RecentItemSummary = () => {
                 borderRadius: '10px',
                 boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.1)',
             }}>
-                {recentItems.map((i) => (
+                {items.map((i) => (
                     <div key={i.id}>
                         <Typography
                             variant="body1"
-                            onClick={() => handleItemClick(i.id)}
+                            onClick={() => handleItemClick(i?.id || 0)}
                             style={{
                                 cursor: 'pointer',
                             }}
@@ -68,16 +78,32 @@ const RecentItemSummary = () => {
                                 }
                             }}
                         >
-                            {i.name}
+                            {i?.name}
                         </Typography>
                     </div>
                 ))}
             </div>
-            <EditOrCreateIngredientDialog
-                open={open}
-                onClose={() => setOpen(false)}
-                existingIngredient={selectedIngredient || undefined}
-            />
+            {kind === RecentItemSummaryKindEnum.INGREDIENT && (
+                <EditOrCreateIngredientDialog
+                    open={ingredientDialogOpen}
+                    onClose={() => setIngredientDialogOpen(false)}
+                    existingIngredientId={selectedItemId}
+                />
+            )}
+            {kind === RecentItemSummaryKindEnum.RECIPE && (
+                <EditOrCreateRecipeDialog
+                    open={recipeDialogOpen}
+                    onClose={() => setRecipeDialogOpen(false)}
+                    existingRecipeId={selectedItemId}
+                />
+            )}
+            {kind === RecentItemSummaryKindEnum.MENU_ITEM && (
+                <EditOrCreateMenuItemDialog
+                    open={menuItemDialogOpen}
+                    onClose={() => setMenuItemDialogOpen(false)}
+                    existingMenuItemId={selectedItemId}
+                />
+            )}
         </div>
     )
 }

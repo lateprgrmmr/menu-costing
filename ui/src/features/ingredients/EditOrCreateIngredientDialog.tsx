@@ -3,17 +3,17 @@ import type { IngredientInsertOrUpdateRequest, IngredientRecord } from "../../sh
 import { useEffect, useState } from "react";
 import { IngredientCategoryEnum, IngredientCategoryValueLookup, UnitTypeEnum } from "../../shared/types/common";
 import { styles } from "../../styles/EditOrCreateIngredient.styles";
-import { createIngredient, updateIngredient } from "../../actions/Ingredient.action";
+import { createIngredient, loadIngredientById, updateIngredient } from "../../actions/Ingredient.action";
 
 
 interface EditOrCreateIngredientDialogProps {
     open: boolean;
     onClose: () => void;
-    existingIngredient?: IngredientRecord;
+    existingIngredientId?: number | null;
 }
 
 export const EditOrCreateIngredientDialog = (props: EditOrCreateIngredientDialogProps) => {
-    const { open, onClose, existingIngredient } = props;
+    const { open, onClose, existingIngredientId } = props;
     const [name, setName] = useState<string>("");
     const [category, setCategory] = useState<IngredientCategoryEnum | null>(null);
     const [vendor, setVendor] = useState<string>("");
@@ -21,7 +21,20 @@ export const EditOrCreateIngredientDialog = (props: EditOrCreateIngredientDialog
     const [purchaseQuantity, setPurchaseQuantity] = useState<number>(0);
     const [purchaseCost, setPurchaseCost] = useState<number>(0);
     const [costPerOz, setCostPerOz] = useState<number>(0);
-    const [isExisting, setIsExisting] = useState<boolean>(false);
+    const [existingIngredient, setExistingIngredient] = useState<IngredientRecord | null>(null);
+
+    
+    useEffect(() => {
+        if (existingIngredientId) { 
+            const getExistingIngredient = async () => {
+                const existing = await loadIngredientById(existingIngredientId);
+                if (existing) {
+                    setExistingIngredient(existing);
+                }
+            }
+            getExistingIngredient();
+        }
+    }, [existingIngredientId]);
 
     useEffect(() => {
         if (existingIngredient) {
@@ -33,7 +46,6 @@ export const EditOrCreateIngredientDialog = (props: EditOrCreateIngredientDialog
             setPurchaseCost(existingIngredient.purchase_cost);
             setCostPerOz(existingIngredient.cost_per_oz);
         }
-        setIsExisting(existingIngredient !== undefined);
     }, [existingIngredient]);
 
     const handleClose = () => {
@@ -49,11 +61,10 @@ export const EditOrCreateIngredientDialog = (props: EditOrCreateIngredientDialog
 
     const handleSave = async () => {
         console.log("validateForm", validateForm());
-        console.log("isExisting", isExisting);
         if (!validateForm()) {
             return;
         }
-        if (isExisting && existingIngredient) {
+        if (existingIngredient) {
             const updatedIngredient: IngredientInsertOrUpdateRequest = {
                 name: name,
                 category: category,
@@ -93,11 +104,21 @@ export const EditOrCreateIngredientDialog = (props: EditOrCreateIngredientDialog
             && (costPerOz > 0 || (purchaseCost > 0 && purchaseQuantity > 0)));
     }
 
+    const hasChanged = () => {
+        return existingIngredient?.name !== name ||
+            existingIngredient?.vendor !== vendor ||
+            existingIngredient?.category !== category ||
+            existingIngredient?.purchase_unit !== purchaseUnit ||
+            existingIngredient?.purchase_quantity !== purchaseQuantity ||
+            existingIngredient?.purchase_cost !== purchaseCost ||
+            existingIngredient?.cost_per_oz !== costPerOz;
+    }
+
     return (
         <Dialog open={open} onClose={handleClose} sx={styles.root}>
-            <DialogTitle>{existingIngredient ? "Edit" : "Create"} Ingredient</DialogTitle>
-            <DialogContent>
-                <FormControl fullWidth error={!validateForm()} component="fieldset">
+            <DialogTitle paddingBottom={'20px'}>{existingIngredient ? "Edit" : "Create"} Ingredient</DialogTitle>
+            <DialogContent >
+                <FormControl sx={{ padding: '10px' }} fullWidth error={!validateForm()} component="fieldset">
                     <TextField
                         label="Name"
                         value={name}
@@ -169,7 +190,7 @@ export const EditOrCreateIngredientDialog = (props: EditOrCreateIngredientDialog
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleSave}>Save</Button>
+                <Button onClick={ hasChanged() ? handleSave : handleClose}>Save</Button>
             </DialogActions>
         </Dialog>
     )

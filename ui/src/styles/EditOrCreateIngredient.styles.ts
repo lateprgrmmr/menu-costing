@@ -18,6 +18,14 @@ export const styles = {
         py: 12,
         px: 4,
     },
+    radioGroup: {
+        marginBottom: 2,
+        marginRight: '5px',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
     textInput: {
         marginBottom: 2,
         marginRight: '5px',

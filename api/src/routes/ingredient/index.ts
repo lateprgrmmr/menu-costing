@@ -13,6 +13,12 @@ router.get("/", async (req: IngredientRequest, res: Response) => {
     res.status(200).json(ingredients);
 });
 
+router.get("/:id", async (req: IngredientRequest, res: Response) => {
+    const { id } = req.params;
+    const ingredient = await daos.ingredientDAO.findIngredientById(req.db, parseInt(id));
+    res.status(200).json(ingredient);
+});
+
 router.get("/recent", async (req: IngredientRequest, res: Response) => {
     const recentIngredients = await daos.ingredientDAO.findRecent(req.db);
     res.status(200).json(recentIngredients);

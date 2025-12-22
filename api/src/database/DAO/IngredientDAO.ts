@@ -11,7 +11,7 @@ export class IngredientDAO extends BaseDAO<IngredientRecord> {
         return await this.find(db, {});
     }
 
-    async findById(db: Connection, id: number): Promise<IngredientRecord | null> {
+    async findIngredientById(db: Connection, id: number): Promise<IngredientRecord | null> {
         return await this.findById(db, id);
     }
 

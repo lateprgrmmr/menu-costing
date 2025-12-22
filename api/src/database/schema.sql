@@ -44,9 +44,15 @@ CREATE TABLE unit_conversion (
     oz_to_tbsp NUMERIC NOT NULL
 );
 
+CREATE TYPE recipe_type AS ENUM (
+    'ingredient',
+    'prep_recipe'
+);
+
 CREATE TABLE prep_recipe (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    -- type recipe_type NOT NULL,
     yield_oz  NUMERIC NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
