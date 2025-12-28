@@ -21,6 +21,7 @@ export const styles = {
     radioGroup: {
         marginBottom: 2,
         marginRight: '5px',
+        paddingLeft: '10px',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',

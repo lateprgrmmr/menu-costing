@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { RecipeIngredientRecord, RecipeUXRecord } from "../../shared/types/recipe";
 import { getRecipe } from "../../actions/Recipe.action";
 import { Delete } from "@mui/icons-material";
-import { styles } from "../../styles/EditOrCreateIngredient.styles";
+import { styles } from "../../styles/EditOrCreateDialog.styles";
 
 interface EditOrCreateRecipeDialogProps {
     open: boolean;
@@ -48,7 +48,7 @@ const EditOrCreateRecipeDialog = (props: EditOrCreateRecipeDialogProps) => {
             <DialogTitle paddingBottom={'20px'}>{existingRecipeId ? "Edit" : "Create"} Recipe</DialogTitle>
             <DialogContent>
                 <FormControl sx={{ padding: '10px' }} fullWidth component="fieldset">
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <TextField
                             label="Recipe Name"
                             value={recipeName}
@@ -57,12 +57,14 @@ const EditOrCreateRecipeDialog = (props: EditOrCreateRecipeDialogProps) => {
                             style={{ width: '100%' }}
                             required
                         />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <TextField
-                            label="Recipe Yield"
+                            label="Recipe Yield (oz)"
                             value={recipeYield}
                             onChange={(e) => setRecipeYield(Number(e.target.value))}
                             sx={styles.textInput}
-                            style={{ width: '100%' }}
+                            style={{ width: '50%' }}
                             required
                         />
                         <RadioGroup
@@ -77,7 +79,7 @@ const EditOrCreateRecipeDialog = (props: EditOrCreateRecipeDialogProps) => {
                     <List>
                         {ingredients && ingredients.map((ingredient) => (
                             <ListItem key={ingredient.ingredient_id}>
-                                <ListItemText primary={ingredient.ingredient_name} secondary={ingredient.quantity} />
+                                <ListItemText primary={ingredient.ingredient_name} secondary={`${ingredient.quantity} ${ingredient.unit}`} />
                                 <IconButton edge="end" aria-label="delete">
                                     <Delete />
                                 </IconButton>

@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import { connectDb, Connection } from "./database/connection";
 import { Request, Response } from "express";
 import ingredientRouter from "./routes/ingredient";
-import dashboardRouter from "./routes/dashboard";
 import recipeRouter from "./routes/recipe";
 
 const APP_PORT = process.env.APP_PORT || 5005;
@@ -25,7 +24,6 @@ const startServer = async () => {
     });
     app.use("/ingredient", ingredientRouter);
     app.use("/recipe", recipeRouter);
-    app.use("/dashboard", dashboardRouter);
 
     console.log("Routes configured");
     app.listen(APP_PORT, () => {

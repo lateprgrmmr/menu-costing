@@ -1,10 +1,16 @@
 import { makeGetRequest, makePostRequest, makePutRequest } from ".";
-import type { IngredientInsertOrUpdateRequest, IngredientRecord } from "../shared/types/ingredient";
+import type { IngredientInsertOrUpdateRequest, IngredientRecord, IngredientUXRecord } from "../shared/types/ingredient";
 
 export const loadIngredients = async () => {
     const ingredients = await makeGetRequest<IngredientRecord[]>('/ingredient');
     console.log(ingredients);
     return ingredients;
+};
+
+export const loadIngredientUXById = async (id: number) => {
+    const ingredient = await makeGetRequest<IngredientUXRecord>(`/ingredient/${id}`);
+    console.log(ingredient);
+    return ingredient;
 };
 
 export const loadRecentIngredients = async () => {
@@ -13,21 +19,11 @@ export const loadRecentIngredients = async () => {
     return recentItems;
 };
 
-export const loadIngredientById = async (id: number) => {
-    const ingredient = await makeGetRequest<IngredientRecord>(`/ingredient/${id}`);
-    console.log(ingredient);
-    return ingredient;
-};
-
 export const updateIngredient = async (id: number, ingredient: IngredientInsertOrUpdateRequest) => {
     const updatedIngredient = await makePutRequest<IngredientRecord>('/ingredient', {
         name: ingredient.name,
         category: ingredient.category,
-        vendor: ingredient.vendor,
-        purchase_unit: ingredient.purchase_unit,
-        purchase_quantity: ingredient.purchase_quantity,
-        purchase_cost: ingredient.purchase_cost,
-        cost_per_oz: ingredient.cost_per_oz,
+        default_measurement_unit: ingredient.default_measurement_unit,
         created_by: ingredient.created_by,
     });
     console.log(id, "updatedIngredient", updatedIngredient);
@@ -38,11 +34,7 @@ export const createIngredient = async (ingredient: IngredientInsertOrUpdateReque
     const newIngredient = await makePostRequest<IngredientRecord>('/ingredient', {
         name: ingredient.name,
         category: ingredient.category,
-        vendor: ingredient.vendor,
-        purchase_unit: ingredient.purchase_unit,
-        purchase_quantity: ingredient.purchase_quantity,
-        purchase_cost: ingredient.purchase_cost,
-        cost_per_oz: ingredient.cost_per_oz,
+        default_measurement_unit: ingredient.default_measurement_unit,
         created_by: ingredient.created_by,
     });
     console.log(newIngredient);

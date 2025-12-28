@@ -2,7 +2,7 @@ import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle
 import type { IngredientInsertOrUpdateRequest, IngredientRecord } from "../../shared/types/ingredient";
 import { useEffect, useState } from "react";
 import { IngredientCategoryEnum, IngredientCategoryValueLookup, UnitTypeEnum } from "../../shared/types/common";
-import { styles } from "../../styles/EditOrCreateIngredient.styles";
+import { styles } from "../../styles/EditOrCreateDialog.styles";
 import { createIngredient, loadIngredientById, updateIngredient } from "../../actions/Ingredient.action";
 
 

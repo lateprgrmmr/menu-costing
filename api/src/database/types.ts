@@ -181,6 +181,12 @@ export abstract class BaseDAO<T, Insert = Partial<T>, Update = Partial<T>> {
     }
 }
 
+export function transaction<T>(db: Connection, callback: (db: Connection) => Promise<T>): Promise<T> {
+    return db.withTransaction(async (tx) => {
+        return await callback(tx);
+    });
+}
+
 /**
  * Read-only DAO (no insert/update/delete)
  */

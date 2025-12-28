@@ -32,8 +32,16 @@ export const Home = () => {
             <Box sx={styles.hero}>
                 <Typography variant="h2" sx={styles.heroTitle}>Portion</Typography>
                 <Typography sx={styles.heroSubtitle}>Built for operators before opening day, Portion makes menu costing fast, transparent, and reusable — so you can price correctly from day one.</Typography>
-                <Button variant="contained" color="primary" onClick={() => navigate("/dashboard")}>
-                    Get Started
+                <Button variant="contained" color="primary" onClick={() => navigate("/ingredient")}>
+                    Ingredients
+
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => navigate("/recipe")}>
+                    Recipes
+
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => navigate("/menu")}>
+                    Menus
 
                 </Button>
             </Box>

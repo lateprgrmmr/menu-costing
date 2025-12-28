@@ -3,6 +3,7 @@ import daos from "../../database";
 import { Connection } from "src/database/connection";
 import { Request, Response } from "express";
 import { IngredientInsertOrUpdateRequest } from "../../shared/types/ingredient";
+import { createNewIngredient, getIngredientUXById } from "./api";
 
 export type IngredientRequest = Request & { db: Connection };
 
@@ -15,19 +16,14 @@ router.get("/", async (req: IngredientRequest, res: Response) => {
 
 router.get("/:id", async (req: IngredientRequest, res: Response) => {
     const { id } = req.params;
-    const ingredient = await daos.ingredientDAO.findIngredientById(req.db, parseInt(id));
+    const ingredient = await getIngredientUXById(req.db, parseInt(id));
     res.status(200).json(ingredient);
-});
-
-router.get("/recent", async (req: IngredientRequest, res: Response) => {
-    const recentIngredients = await daos.ingredientDAO.findRecent(req.db);
-    res.status(200).json(recentIngredients);
 });
 
 router.post("/", async (req: IngredientRequest, res: Response) => {
     const { body, db } = req
     const ingredientToCreate = IngredientInsertOrUpdateRequest.fromRequest(body);
-    const newIngredient = await daos.ingredientDAO.insert(db, ingredientToCreate);
+    const newIngredient = await createNewIngredient(db, ingredientToCreate);
     if (newIngredient) {
         res.status(201).json(newIngredient);
     } else {

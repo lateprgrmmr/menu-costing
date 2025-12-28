@@ -1,6 +1,6 @@
 import { connectDb } from "./connection";
 import { IngredientDAO } from "./DAO/IngredientDAO";
-import { RecipeDAO } from "./DAO/RecipeDAO";
+import { RecipeComponentDAO, RecipeDAO } from "./DAO/RecipeDAO";
 
 export async function databaseConnectionFunction() {
   return connectDb();
@@ -9,4 +9,5 @@ export async function databaseConnectionFunction() {
 export default {
   ingredientDAO: new IngredientDAO(),
   recipeDAO: new RecipeDAO(),
+  recipeComponentDAO: new RecipeComponentDAO(),
 }

@@ -1,4 +1,4 @@
-import { IngredientInsertOrUpdateRequest, IngredientRecord } from "src/shared/types/ingredient";
+import { IngredientDensityInsertOrUpdateRequest, IngredientDensityRecord, IngredientInsertOrUpdateRequest, IngredientPurchaseInsertOrUpdateRequest, IngredientPurchaseRecord, IngredientRecord, IngredientUXRecord } from "src/shared/types/ingredient";
 import { Connection } from "../connection";
 import { BaseDAO } from "../types";
 
@@ -12,15 +12,46 @@ export class IngredientDAO extends BaseDAO<IngredientRecord> {
     }
 
     async findIngredientById(db: Connection, id: number): Promise<IngredientRecord | null> {
+        // get object with all related data
         return await this.findById(db, id);
     }
 
-    async create(db: Connection, ingredient: IngredientInsertOrUpdateRequest): Promise<IngredientRecord> {
-        return await this.create(db, ingredient);
+    async createNewIngredient(
+        db: Connection,
+        ingredient: IngredientInsertOrUpdateRequest
+    ): Promise<IngredientRecord> {
+        return await this.insert(db, ingredient);
     }
 
-    async findRecent(db: Connection): Promise<IngredientRecord[]> {
-        return await this.executeScript(db, "findRecentIngredients", {});
+    async findIngredientUXById(db: Connection, id: number): Promise<IngredientUXRecord | null> {
+        const result = await this.executeScript(db, 'getIngredientUX', { ingredientId: id });
+        if (!result || result.length === 0) {
+            return null;
+        }
+        return result[0];
     }
+}
 
-}   
+export class IngredientDensityDAO extends BaseDAO<IngredientDensityRecord> {
+    protected getTableName(): string {
+        return "ingredient_density";
+    }
+    async createNewIngredientDensity(
+        db: Connection,
+        ingredientDensity: IngredientDensityInsertOrUpdateRequest
+    ): Promise<IngredientDensityRecord> {
+        return await this.insert(db, ingredientDensity);
+    }
+}
+
+export class IngredientPurchaseDAO extends BaseDAO<IngredientPurchaseRecord> {
+    protected getTableName(): string {
+        return "ingredient_purchase";
+    }
+    async createNewIngredientPurchase(
+        db: Connection,
+        ingredientPurchase: IngredientPurchaseInsertOrUpdateRequest
+    ): Promise<IngredientPurchaseRecord> {
+        return await this.insert(db, ingredientPurchase);
+    }
+}
