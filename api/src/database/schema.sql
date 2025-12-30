@@ -47,6 +47,14 @@ CREATE TYPE recipe_type AS ENUM (
     'recipe'
 );
 
+CREATE TABLE vendor (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    -- TODO: add address, phone, email, website, etc.
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE ingredient (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -67,7 +75,7 @@ CREATE TABLE ingredient_density (
 CREATE TABLE ingredient_purchase (
     id SERIAL PRIMARY KEY,
     ingredient_id INT NOT NULL REFERENCES ingredient(id),
-    vendor TEXT,
+    vendor_id INT REFERENCES vendor(id),
     vendor_item_number TEXT,
     price NUMERIC NOT NULL,
     purchase_unit unit_type NOT NULL,

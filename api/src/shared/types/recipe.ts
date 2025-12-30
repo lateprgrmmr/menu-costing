@@ -18,6 +18,7 @@ export interface RecipeRecord {
 }
 
 export interface RecipeComponentRecord {
+    id: number;
     recipe_id?: number;
     ingredient_id?: number;
     child_recipe_id?: number;
@@ -27,6 +28,7 @@ export interface RecipeComponentRecord {
 }
 
 const RecipeComponentInsertOrUpdateRequestDefinition = t.type({
+    id: t.number,
     recipe_id: t.union([t.number, t.undefined]),
     component_type: t.union([t.literal('ingredient'), t.literal('recipe')]),
     ingredient_id: t.union([t.number, t.undefined]),

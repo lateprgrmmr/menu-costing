@@ -2,14 +2,13 @@
 import { Box, Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import useRecipes from "../../common/hooks/useRecipes";
 import { useNavigate } from "react-router-dom";
-import type { RecipeUXRecord } from "../../shared/types/recipe";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { useState } from "react";
 import CreateOrEditRecipeDialog from "./RecipeCardForm/CreateOrEditRecipeDialog";
+import dayjs from "dayjs";
 
 const columns = [
     { header: 'Name', accessor: 'name' },
-    { header: 'Category', accessor: 'category' },
     { header: 'Yield', accessor: 'yield_quantity' },
     { header: 'Yield Unit', accessor: 'yield_unit' },
     { header: 'Created At', accessor: 'created_at' },
@@ -43,15 +42,24 @@ const RecipePage = () => {
                     <TableBody>
                         {recipes.map((recipe) => (
                             <TableRow key={recipe.id}>
-                                {columns.map((column) => (
-                                    <TableCell
-                                        key={column.accessor}
-                                        onClick={() => navigate(`/recipe/${recipe.id}`)}
-                                        sx={{ cursor: 'pointer', textTransform: 'capitalize' }}
-                                    >
-                                        {recipe[column.accessor as keyof RecipeUXRecord] as string}
-                                    </TableCell>
-                                ))}
+                                <TableCell
+                                    onClick={() => navigate(`/recipe/${recipe.id}`)}
+                                    sx={{ cursor: 'pointer', textTransform: 'capitalize' }}
+                                >
+                                    {recipe.name}
+                                </TableCell>
+                                <TableCell>
+                                    {recipe.yield_quantity}
+                                </TableCell>
+                                <TableCell>
+                                    {recipe.yield_unit}
+                                </TableCell>
+                                <TableCell>
+                                    {dayjs(recipe.created_at).format('MM/DD/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                    {dayjs(recipe.updated_at).format('MM/DD/YYYY')}
+                                </TableCell>
                                 <TableCell>
                                     <IconButton
                                         color="primary"

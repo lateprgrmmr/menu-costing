@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 // import brattsBitesLogo from "../../assets/newLogo.png";
 import portionLogo from "../../assets/portion_logo.png";
-import { Menu as MenuIcon } from "@mui/icons-material";
+import ActionButton from "./ActionButton";
 
 const AppBar = () => {
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ const AppBar = () => {
                     Home
                 </Button>
                 <IconButton color="primary" sx={{ marginRight: 2 }}>
-                    <MenuIcon />
+                    <ActionButton />
                 </IconButton>
             </Box>
         </Box>

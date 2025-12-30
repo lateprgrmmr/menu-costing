@@ -108,6 +108,7 @@ const CreateOrEditRecipeDialog = (props: CreateOrEditRecipeDialogProps) => {
         const componentsPayload = components
             .filter(c => c.component !== null)  // Skip empty rows
             .map((row) => ({
+                id: row.component!.id,
                 recipe_id: existingRecipe?.id,
                 component_type: row.component!.type,  // 'ingredient' | 'recipe'
                 ingredient_id: row.component!.type === 'ingredient' ? row.component!.id : undefined,

@@ -1,5 +1,7 @@
-import { Chip } from "@mui/material";
+import { Button, Chip } from "@mui/material";
 import type { IngredientUXRecord } from "../../shared/types/ingredient";
+import { ArrowBackIosNew } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface IngredientHeaderProps {
     ingredient: IngredientUXRecord;
@@ -7,7 +9,12 @@ interface IngredientHeaderProps {
 
 const IngredientHeader = (props: IngredientHeaderProps) => {
     const { ingredient } = props;
+    const navigate = useNavigate();
     console.log('ingredient from header', ingredient);
+
+    const handleBack = () => {
+        navigate('/ingredient');
+    };
     return (
         <div
             style={{
@@ -17,6 +24,10 @@ const IngredientHeader = (props: IngredientHeaderProps) => {
                 alignItems: 'center',
                 gap: '10px'
             }}>
+            <Button variant="outlined" color="primary" onClick={handleBack} sx={{ marginBottom: '20px' }}>
+                <ArrowBackIosNew sx={{ marginRight: 1 }} />
+                Back to ingredients
+            </Button>
             <div style={{ fontSize: '24px', fontWeight: 'bold', textTransform: 'capitalize' }}>{ingredient.name}</div>
             <div style={{ fontSize: '16px', fontWeight: 'bold', textTransform: 'capitalize' }}>{ingredient.category}</div>
             <Chip

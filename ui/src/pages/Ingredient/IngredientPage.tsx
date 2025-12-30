@@ -1,7 +1,10 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import useIngredients from "../../common/hooks/useIngredients"
-import type { IngredientRecord } from "../../shared/types/ingredient";
 import { useNavigate } from "react-router-dom";
+import { Add } from "@mui/icons-material";
+import { useState } from "react";
+import CreateOrEditIngredientDialog from "./IngredientBaseCardForm/CreateOrEditIngredientDialog";
+import dayjs from "dayjs";
 
 const columns = [
     { header: 'Name', accessor: 'name' },
@@ -15,34 +18,60 @@ const columns = [
 
 const IngredientPage = () => {
     const { ingredients } = useIngredients();
+    const [createIngredientOpen, setCreateIngredientOpen] = useState(false);
     const navigate = useNavigate();
+
+    const handleCreateIngredient = () => {
+        setCreateIngredientOpen(true);
+    }
     return (
         <div>
-            <h1>Ingredients</h1>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        {columns.map((column) => (
-                            <TableCell key={column.accessor}>{column.header}</TableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {ingredients.map((ingredient) => (
-                        <TableRow key={ingredient.id}>
+            <Button variant="outlined" color="primary" onClick={handleCreateIngredient}>
+                <Add sx={{ marginRight: 1 }} />
+                Add New Ingredient
+            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
                             {columns.map((column) => (
+                                <TableCell key={column.accessor}>{column.header}</TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {ingredients.map((ingredient) => (
+                            <TableRow key={ingredient.id}>
                                 <TableCell
-                                    key={column.accessor}
                                     onClick={() => navigate(`/ingredient/${ingredient.id}`)}
                                     sx={{ cursor: 'pointer' }}
                                 >
-                                    {ingredient[column.accessor as keyof IngredientRecord] as string}
+                                    {ingredient.name}
                                 </TableCell>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                                <TableCell>
+                                    {ingredient.category}
+                                </TableCell>
+                                <TableCell>
+                                    {ingredient.default_measurement_unit}
+                                </TableCell>
+                                <TableCell>
+                                    {ingredient.created_by}
+                                </TableCell>
+                                <TableCell>
+                                    {dayjs(ingredient.created_at).format('MM/DD/YYYY')}
+                                </TableCell>
+                                <TableCell>
+                                    {dayjs(ingredient.updated_at).format('MM/DD/YYYY')}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </Box>
+            <CreateOrEditIngredientDialog
+                open={createIngredientOpen}
+                onClose={() => setCreateIngredientOpen(false)}
+            />
         </div>
     )
 };
